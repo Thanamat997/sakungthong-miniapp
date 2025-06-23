@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แจ้งซ่อมหอพัก</title>
+  <style>
+    body { font-family: sans-serif; max-width: 500px; margin: auto; padding: 20px; }
+    label { font-weight: bold; }
+    input, select, textarea { width: 100%; padding: 8px; margin: 5px 0 15px; }
+    button { padding: 10px 15px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h2>🛠 แบบฟอร์มแจ้งซ่อมห้องพัก</h2>
+  <form id="repairForm">
+    <label>ชื่อผู้แจ้ง:</label>
+    <input type="text" id="name" required>
+
+    <label>เบอร์โทรศัพท์:</label>
+    <input type="tel" id="phone" required pattern="[0-9]{9,10}">
+
+    <label>เลขที่ห้อง:</label>
+    <input type="text" id="room" required>
+
+    <label>ประเภทปัญหา:</label>
+    <select id="issueType" required>
+      <option value="">-- กรุณาเลือก --</option>
+      <option value="ไฟฟ้า">ไฟฟ้า</option>
+      <option value="น้ำประปา">น้ำประปา</option>
+      <option value="แอร์/พัดลม">แอร์/พัดลม</option>
+      <option value="ประตู/หน้าต่าง">ประตู/หน้าต่าง</option>
+      <option value="อื่น ๆ">อื่น ๆ</option>
+    </select>
+
+    <label>รายละเอียดเพิ่มเติม:</label>
+    <textarea id="details" rows="4" placeholder="อธิบายเพิ่มเติมถ้ามี..."></textarea>
+
+    <label>แนบรูปภาพ (ถ้ามี):</label>
+    <input type="file" id="image" accept="image/*" disabled><br><small>(* ยังไม่เปิดใช้ในเวอร์ชันนี้)</small>
+
+    <button type="submit">ส่งแจ้งซ่อม</button>
+  </form>
+
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'; // <-- เปลี่ยนเป็นลิงก์จริงของคุณ
+
+    document.getElementById("repairForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const data = {
+        name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
+        room: document.getElementById("room").value,
+        issueType: document.getElementById("issueType").value,
+        details: document.getElementById("details").value,
+      };
+
+      try {
+        const res = await fetch(scriptURL, {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: { "Content-Type": "application/json" }
+        });
+        alert("📬 แจ้งซ่อมเรียบร้อย! ขอบคุณที่แจ้งนะคะ");
+        document.getElementById("repairForm").reset();
+      } catch (err) {
+        alert("❌ ส่งข้อมูลไม่สำเร็จ ลองใหม่อีกครั้ง");
+      }
+    });
+  </script>
+</body>
+</html>
